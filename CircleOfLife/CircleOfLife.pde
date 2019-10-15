@@ -1,5 +1,5 @@
 // Taille des cellules
-int cellSize = 5;
+int cellSize = 15;
 
 // Pourcentage des cellules vivantes au début
 float probCellsAliveStart = 15;
