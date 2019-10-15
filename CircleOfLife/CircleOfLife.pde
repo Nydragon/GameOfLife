@@ -1,16 +1,18 @@
+import controlP5.*;
+
+ControlP5 jControl;
+
 // Taille des cellules
-int cellSize = 15;
+int cellSize = 5;
 
 // Pourcentage des cellules vivantes au début
 float probCellsAliveStart = 15;
 
 // Variables pour le temps
-int interval = 100;
+int interval = 50;
 int lastRecordedTime = 0;
 
-// Couleur des cases vivantes ou mortes
-color alive = color(0, 200, 0);
-color dead = color(0);
+
 
 // Tableau de cellules
 int[][] cells; 
@@ -23,17 +25,29 @@ boolean pause = false;
 
 // Taille de la fenêtre de l'executable
 public void settings() {
-  size(640, 360);
+  size(1280, 720);
 }
 
-void setup() {
+//variables for the colors of the background
+int backgroundR = 0;
+int backgroundG = 0;
+int backgroundB = 0;
 
+void setup() {
+  
+  jControl = new ControlP5(this);
+  
+  //slider initiated
+  Slider sR = jControl.addSlider("backgroundR", 0, 255, 100, 10, 10, 200, 30);
+  Slider sG = jControl.addSlider("backgroundG", 0, 255, 100, 10, 50, 200, 30);
+  Slider sB = jControl.addSlider("backgroundB", 0, 255, 100, 10, 90, 200, 30);
+  
   // Initialisation des tableaux
   cells = new int[width/cellSize][height/cellSize];
   cellsBuffer = new int[width/cellSize][height/cellSize];
 
   // Dessiner le background en blanc
-  stroke(255);
+
 
   // Initialisation des cellules
   for (int x = 0; x < width/cellSize; x++) {
@@ -50,8 +64,12 @@ void setup() {
   background(255); // Remplir en blanc si les cases ne couvrent pas toutes les fenêtres
 }
 
-void draw() {
+// Couleur des cases vivantes ou mortes
+color alive = color(0, 200, 0);
+color dead = color(0);
 
+void draw() {
+  stroke(backgroundR, backgroundG, backgroundB);
   //Dessiner la grille
   for (int x = 0; x < width/cellSize; x++) {
     for (int y = 0; y < height/cellSize; y++) {
