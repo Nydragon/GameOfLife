@@ -33,6 +33,16 @@ int backgroundR = 0;
 int backgroundG = 0;
 int backgroundB = 0;
 
+//variables for the colors of the dead cells
+int deadCellR = 0;
+int deadCellG = 0;
+int deadCellB = 0;
+
+//variables for the colors of the dead cells
+int livingCellR = 0;
+int livingCellG = 0;
+int livingCellB = 0;
+
 void setup() {
   
   jControl = new ControlP5(this);
