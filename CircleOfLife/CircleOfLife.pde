@@ -2,7 +2,8 @@ import controlP5.*;
 
 ControlP5 jControl;
 
-int CellCounter = 0;
+float LivingCellCounter = 0;
+float DeadCellCounter = 0;
 
 // Pourcentage des cellules vivantes au début
 float probCellsAliveStart = 15;
@@ -101,21 +102,27 @@ void draw() {
   for (int x = 0; x < width/cellSize; x++) {
     for (int y = 0; y < height/cellSize; y++) {
       if (cells[x][y] == 1) {
-        CellCounter++;
+        LivingCellCounter++;
         fill(livingCellR, livingCellG, livingCellB); // Cellule vivante
       } else {
+        DeadCellCounter++;
         fill(deadCellR, deadCellG, deadCellB); // Cellule morte
       }
       rect (x * cellSize, y * cellSize, cellSize, cellSize);
     }
   }
   
-  int max = CellCounter;
   
-  print(CellCounter); 
+  float percentage =  (LivingCellCounter / (LivingCellCounter + DeadCellCounter)) *100.0 ;
+  percentage = percentage * 1000;
+  percentage = round(percentage);
+  percentage = percentage/1000;
+  print(round(LivingCellCounter) + " / " + round(DeadCellCounter) + " / " + percentage +"%"); 
   println();
+ 
   
-  CellCounter = 0;
+  LivingCellCounter = 0;
+  DeadCellCounter = 0;
   // Itérer si la minuterie ..
   if (millis()-lastRecordedTime>interval) {
     if (!pause) {
