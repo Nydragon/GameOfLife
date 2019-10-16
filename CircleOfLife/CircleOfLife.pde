@@ -2,8 +2,7 @@ import controlP5.*;
 
 ControlP5 jControl;
 
-// Taille des cellules
-int cellSize = 5;
+
 
 // Pourcentage des cellules vivantes au début
 float probCellsAliveStart = 15;
@@ -12,6 +11,7 @@ float probCellsAliveStart = 15;
 int interval = 50;
 int lastRecordedTime = 0;
 
+int speed = 5;
 
 
 // Tableau de cellules
@@ -40,21 +40,37 @@ int deadCellB = 0;
 
 //variables for the colors of the dead cells
 int livingCellR = 0;
-int livingCellG = 0;
+int livingCellG = 255;
 int livingCellB = 0;
+
+// Taille des cellules
+int cellSize = 5;
+
+// Couleur des cases mortes
+color dead = color(0);
 
 void setup() {
   
   jControl = new ControlP5(this);
   
   //slider initiated
-  Slider sR = jControl.addSlider("backgroundR", 0, 255, 100, 10, 10, 200, 30);
-  Slider sG = jControl.addSlider("backgroundG", 0, 255, 100, 10, 50, 200, 30);
-  Slider sB = jControl.addSlider("backgroundB", 0, 255, 100, 10, 90, 200, 30);
+  Slider sR = jControl.addSlider("backgroundR", 0, 255, 0, 10, 10, 200, 30);
+  Slider sG = jControl.addSlider("backgroundG", 0, 255, 0, 10, 50, 200, 30);
+  Slider sB = jControl.addSlider("backgroundB", 0, 255, 0, 10, 90, 200, 30);
 
-  Slider sRl = jControl.addSlider("livingCellR", 0, 255, 100, 10, 160, 200, 30);
-  Slider sGl = jControl.addSlider("livingCellG", 0, 255, 100, 10, 200, 200, 30);
-  Slider sBl = jControl.addSlider("livingCellB", 0, 255, 100, 10, 240, 200, 30);
+  Slider sRl = jControl.addSlider("livingCellR", 0, 255, 0, 10, 160, 200, 30);
+  Slider sGl = jControl.addSlider("livingCellG", 0, 255, 255, 10, 200, 200, 30);
+  Slider sBl = jControl.addSlider("livingCellB", 0, 255, 0, 10, 240, 200, 30);
+  
+  Slider sRd = jControl.addSlider("deadCellR", 0, 255, 0, 10, 300, 200, 30);
+  Slider sGd = jControl.addSlider("deadCellG", 0, 255, 255, 10, 340, 200, 30);
+  Slider sBd = jControl.addSlider("deadCellB", 0, 255, 0, 10, 380, 200, 30);
+  
+  Slider cell = jControl.addSlider("cellSize", 5, 20, 5, 10, 440, 200, 30);
+  
+  Slider sp = jControl.addSlider("interval", 100, 1000, 300, 10, 500, 200, 30);
+  
+  
   // Initialisation des tableaux
   cells = new int[width/cellSize][height/cellSize];
   cellsBuffer = new int[width/cellSize][height/cellSize];
@@ -77,9 +93,7 @@ void setup() {
   background(255); // Remplir en blanc si les cases ne couvrent pas toutes les fenêtres
 }
 
-// Couleur des cases vivantes ou mortes
-color alive = color(0, 200, 0);
-color dead = color(0);
+
 
 void draw() {
   stroke(backgroundR, backgroundG, backgroundB);
@@ -87,9 +101,9 @@ void draw() {
   for (int x = 0; x < width/cellSize; x++) {
     for (int y = 0; y < height/cellSize; y++) {
       if (cells[x][y] == 1) {
-        fill(alive); // Cellule vivante
+        fill(livingCellR, livingCellG, livingCellB); // Cellule vivante
       } else {
-        fill(dead); // Cellule morte
+        fill(deadCellR, deadCellG, deadCellB); // Cellule morte
       }
       rect (x * cellSize, y * cellSize, cellSize, cellSize);
     }
@@ -118,7 +132,7 @@ void draw() {
     }
     else { // Cellule morte
       cells[xCellOver][yCellOver]=1; // Faire revivre
-      fill(alive); // Remplir avec couleur de vie
+      fill(livingCellR, livingCellG, livingCellB); // Remplir avec couleur de vie
     }
   }
   else if (pause && !mousePressed) { // Et puis sauvegarder dans le tampon une fois que la souris monte
