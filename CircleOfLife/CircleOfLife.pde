@@ -51,7 +51,7 @@ int cellSize = 5;
 color dead = color(0);
 
 void setup() {
- 
+
   jControl = new ControlP5(this);
   
   //slider initiated
@@ -97,6 +97,8 @@ void setup() {
 
 
 void draw() {
+  
+ 
   stroke(backgroundR, backgroundG, backgroundB);
   //Dessiner la grille
   for (int x = 0; x < width/cellSize; x++) {
@@ -157,6 +159,11 @@ void draw() {
       }
     }
   }
+  // rectangle orange
+   fill(204, 102, 0);
+   rect(width/3, height/3, 600, 400);
+
+  
 }
 
 void iteration() {
