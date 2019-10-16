@@ -25,7 +25,7 @@ boolean pause = false;
 
 // Taille de la fenêtre de l'executable
 public void settings() {
-  size(1280, 720);
+  size(1600, 900);
 }
 
 //variables for the colors of the background
@@ -41,7 +41,10 @@ void setup() {
   Slider sR = jControl.addSlider("backgroundR", 0, 255, 100, 10, 10, 200, 30);
   Slider sG = jControl.addSlider("backgroundG", 0, 255, 100, 10, 50, 200, 30);
   Slider sB = jControl.addSlider("backgroundB", 0, 255, 100, 10, 90, 200, 30);
-  
+
+  Slider sRl = jControl.addSlider("livingCellR", 0, 255, 100, 10, 160, 200, 30);
+  Slider sGl = jControl.addSlider("livingCellG", 0, 255, 100, 10, 200, 200, 30);
+  Slider sBl = jControl.addSlider("livingCellB", 0, 255, 100, 10, 240, 200, 30);
   // Initialisation des tableaux
   cells = new int[width/cellSize][height/cellSize];
   cellsBuffer = new int[width/cellSize][height/cellSize];
