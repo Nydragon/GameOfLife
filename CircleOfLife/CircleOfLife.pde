@@ -21,12 +21,12 @@ int[][] cells;
 int[][] cellsBuffer; 
 
 //OPTION : 
-// Pause
+// Pause 
 boolean pause = false;
 
 // Taille de la fenêtre de l'executable
 public void settings() {
-  size(1600, 900);
+    fullScreen();
 }
 
 //variables for the colors of the background
@@ -51,7 +51,7 @@ int cellSize = 5;
 color dead = color(0);
 
 void setup() {
-  
+ 
   jControl = new ControlP5(this);
   
   //slider initiated
