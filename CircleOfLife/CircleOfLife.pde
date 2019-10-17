@@ -76,8 +76,6 @@ void setup() {
   cells = new int[width/cellSize][height/cellSize];
   cellsBuffer = new int[width/cellSize][height/cellSize];
 
-  // Dessiner le background en blanc
-
 
   // Initialisation des cellules
   for (int x = 0; x < width/cellSize; x++) {
@@ -141,56 +139,65 @@ void draw() {
     int yCellOver = int(map(mouseY, 0, height, 0, height/cellSize));
     yCellOver = constrain(yCellOver, 0, height/cellSize-1);
 
+
     // Verifier les cellules dans le tampon
     if (cellsBuffer[xCellOver][yCellOver]==1) { // Cellule en vie
-      cells[xCellOver][yCellOver]=0; // Tuer
+      cells[xCellOver][yCellOver] = 0; // Tuer
       fill(dead); // remplir avec couleur de tuer
     }
     else { // Cellule morte
-      cells[xCellOver][yCellOver]=1; // Faire revivre
+      cells[xCellOver][yCellOver] = 1; // Faire revivre
       fill(livingCellR, livingCellG, livingCellB); // Remplir avec couleur de vie
     }
   }
   else if (pause && !mousePressed) { // Et puis sauvegarder dans le tampon une fois que la souris monte
   // Sauvegarder les cellules dans le tampon (on opère donc avec un tableau en gardant l'autre intact)
-    for (int x=0; x<width/cellSize; x++) {
-      for (int y=0; y<height/cellSize; y++) {
+    for (int x = 0; x < width/cellSize; x++) {
+      for (int y = 0; y < height/cellSize; y++) {
         cellsBuffer[x][y] = cells[x][y];
       }
     }
   }
-  // rectangle orange
-   fill(204, 102, 0);
-   rect(width/3, height/3, 600, 400);
-
   
-}
+  
+// MENU
+  // Rectangle  
+ //  fill(220, 20, 60, 90);
+ //  rect(width/3, height/3, 600, 400, 40);
+  //Texte du menu
+ //  fill(0, 0, 255);
+ //  textSize(36);
+ //  text("Cliquez sur Play pour commencer", 650, 450); 
+  // button(); //appel fonction du bouton
+}  
+
 
 void iteration() {
   // Quand minuterie arrive à zero
   // Sauvegarder les cellules dans le tampon (on opère donc avec un tableau en gardant l'autre intact)
-  for (int x=0; x<width/cellSize; x++) {
-    for (int y=0; y<height/cellSize; y++) {
+  for (int x = 0; x < width/cellSize; x++) {
+    for (int y = 0; y < height/cellSize; y++) {
       cellsBuffer[x][y] = cells[x][y];
     }
   }
+  
   // Visiter chaque cellule
-  for (int x=0; x<width/cellSize; x++) {
-    for (int y=0; y<height/cellSize; y++) {
+  for (int x = 0; x < width/cellSize; x++) {
+    for (int y = 0; y < height/cellSize; y++) {
       // Visiter les voisins de chque cellule
       int neighbours = 0;//On compte les voisins
-      for (int xx=x-1; xx<=x+1; xx++) {
-        for (int yy=y-1; yy<=y+1; yy++) {
-          if (((xx>=0)&&(xx<width/cellSize))&&((yy>=0)&&(yy<height/cellSize))) {  // S'assurer qu'on reste dans les limites
-            if (!((xx==x)&&(yy==y))) {    // Verifier la cellule
-              if (cellsBuffer[xx][yy]==1) {
-                neighbours ++;   // Verfier les voisins
+      for (int xx = x-1; xx <= x+1; xx++) {
+        for (int yy = y-1; yy <= y+1; yy++) {
+          if (((xx >= 0) && (xx < width/cellSize)) && ((yy >= 0) && (yy < height/cellSize))) {  // S'assurer qu'on reste dans les limites
+            if (!((xx == x)&&(yy == y))) {    // Verifier la cellule
+              if (cellsBuffer[xx][yy] == 1) {
+                neighbours++;   // Verfier les voisins
               }
             } // End of if
           } // End of if
         } // End of yy loop
       } //End of xx loop
-      if (cellsBuffer[x][y]==1) {   // La cellule est en vie : la tuer si necessaire
+      if (cellsBuffer[x][y] == 1) {   // La cellule est en vie : la tuer si necessaire
         if (neighbours < 2 || neighbours > 3) {
           cells[x][y] = 0;   // Mourir sauf si il a 2/3 voisins
         }
@@ -203,13 +210,14 @@ void iteration() {
   } // End of x loop
 } // End of function
 
+
 // OPTION : 
 // Si on allume manuellement une cellule
 void keyPressed() {
-  if (key=='r' || key == 'R') {
+  if (key == 'r' || key == 'R') {
     // Restart : réinitialisation des cellules (TOUCHE 'R' ??)
-    for (int x=0; x<width/cellSize; x++) {
-      for (int y=0; y<height/cellSize; y++) {
+    for (int x = 0; x < width/cellSize; x++) {
+      for (int y = 0; y < height/cellSize; y++) {
         float state = random (100);
         if (state > probCellsAliveStart) {
           state = 0;
@@ -220,14 +228,37 @@ void keyPressed() {
       }
     }
   }
-  if (key==' ') { // ON/OFF de pause (TOUCHE BARRE ESPACE ??)
+  if (key == ' ') { // ON/OFF de pause (TOUCHE BARRE ESPACE ??)
     pause = !pause;
   }
-  if (key=='c' || key == 'C') { // // Faire un clear all
-    for (int x=0; x<width/cellSize; x++) {
-      for (int y=0; y<height/cellSize; y++) {
+  if (key == 'c' || key == 'C') { // // Faire un clear all
+    for (int x = 0; x < width/cellSize; x++) {
+      for (int y = 0; y < height/cellSize; y++) {
         cells[x][y] = 0; // Tout remettre à zeros
       }
+    }
+  }
+}
+
+
+  /**
+  *   Bouton Play FONCTIONNE PAS
+  *   Ligne 171 - pour l'activer enlever les commentaires
+  *   Si ACTIVE, n'affiche plus le jeu, QUE le carré bleu
+  */
+void button() {
+  
+  float x = width / 2.2;
+  float y = height / 1.9;
+  int w = 100;
+  int h = 50;
+  
+   background(255);
+  rect(x, y, w, h);
+   fill(0, 0, 255);
+    if (mousePressed){
+     if (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h) {
+      print("Play");
     }
   }
 }
