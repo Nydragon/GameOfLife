@@ -1,9 +1,25 @@
-import controlP5.*;
+// PROBLEMES A REGLES
+// Ajouter commentaires pour les variables et pour les lignes de code confuses
+// La pause en jeu ne fonctionne pas
+// On peut mettre play en cliquant n'importe où
+// Cellules ne bougent pas sur les lignes extérieures -> Pourquoi ??
 
+
+import controlP5.*;
+import processing.serial.*;
+
+//test
 ControlP5 jControl;
+
+float prevY;
+
+float lastFrameY;
 
 float LivingCellCounter = 0;
 float DeadCellCounter = 0;
+float percentage = 0;
+float LivingCell = 0;
+float DeadCell = 0;
 
 // Pourcentage des cellules vivantes au début
 float probCellsAliveStart = 15;
@@ -22,11 +38,14 @@ int[][] cellsBuffer;
 
 //OPTION : 
 // Pause 
-boolean pause = false;
+int etat; // Si etat = 0 -> Début du jeu (JeuPause + Menu) ; etat = 1 -> Jeu qui tourne sans pause ; etat = 2 -> Pause dans le jeu
 
 // Taille de la fenêtre de l'executable
 public void settings() {
-    fullScreen();
+    size(1600, 900);
+    String[] args = {"TwoFrameTest"};
+    Graph sa = new Graph();
+    PApplet.runSketch(args, sa);
 }
 
 //variables for the colors of the background
@@ -50,6 +69,10 @@ int cellSize = 5;
 // Couleur des cases mortes
 color dead = color(0);
 
+
+
+
+
 void setup() {
 
   jControl = new ControlP5(this);
@@ -64,7 +87,7 @@ void setup() {
   Slider sBl = jControl.addSlider("livingCellB", 0, 255, 0, 10, 240, 200, 30);
   
   Slider sRd = jControl.addSlider("deadCellR", 0, 255, 0, 10, 300, 200, 30);
-  Slider sGd = jControl.addSlider("deadCellG", 0, 255, 255, 10, 340, 200, 30);
+  Slider sGd = jControl.addSlider("deadCellG", 0, 255, 0, 10, 340, 200, 30);
   Slider sBd = jControl.addSlider("deadCellB", 0, 255, 0, 10, 380, 200, 30);
   
   Slider cell = jControl.addSlider("cellSize", 5, 20, 5, 10, 440, 200, 30);
@@ -94,9 +117,24 @@ void setup() {
 
 
 
+
 void draw() {
+    
+  if (etat == 0) {
+    DessinerGrille();
+    Menu();
+  } else if (etat == 1) {
+    DessinerGrille();
+  } else if (etat == 2) { 
+    DessinerGrille();
+  }
+}
+
+
+
+
+void DessinerGrille() {
   
- 
   stroke(backgroundR, backgroundG, backgroundB);
   //Dessiner la grille
   for (int x = 0; x < width/cellSize; x++) {
@@ -111,28 +149,29 @@ void draw() {
       rect (x * cellSize, y * cellSize, cellSize, cellSize);
     }
   }
-  
-  
-  float percentage =  (LivingCellCounter / (LivingCellCounter + DeadCellCounter)) *100.0 ;
+  DeadCell = DeadCellCounter;
+  LivingCell = LivingCellCounter;
+
+  percentage =  (LivingCell / (LivingCell + DeadCell)) *100.0 ;
   percentage = percentage * 1000;
   percentage = round(percentage);
   percentage = percentage/1000;
-  print(round(LivingCellCounter) + " / " + round(DeadCellCounter) + " / " + percentage +"%"); 
+  print(round(LivingCell) + " / " + round(DeadCell) + " / " + percentage +"%"); 
   println();
  
   
   LivingCellCounter = 0;
   DeadCellCounter = 0;
   // Itérer si la minuterie ..
-  if (millis()-lastRecordedTime>interval) {
-    if (!pause) {
+  if (millis( )- lastRecordedTime > interval) {
+    if (etat == 1) {
       iteration();
       lastRecordedTime = millis();
     }
   }
   
   // créer nouvelles cellules manuellement en pause
-  if (pause && mousePressed) {
+  if ((etat == 2) && mousePressed) {
     // Mapper et eviter les erreurs hots limites
     int xCellOver = int(map(mouseX, 0, width, 0, width/cellSize));
     xCellOver = constrain(xCellOver, 0, width/cellSize-1);
@@ -150,7 +189,7 @@ void draw() {
       fill(livingCellR, livingCellG, livingCellB); // Remplir avec couleur de vie
     }
   }
-  else if (pause && !mousePressed) { // Et puis sauvegarder dans le tampon une fois que la souris monte
+  else if ((etat == 2) && !mousePressed) { // Et puis sauvegarder dans le tampon une fois que la souris monte
   // Sauvegarder les cellules dans le tampon (on opère donc avec un tableau en gardant l'autre intact)
     for (int x = 0; x < width/cellSize; x++) {
       for (int y = 0; y < height/cellSize; y++) {
@@ -158,18 +197,44 @@ void draw() {
       }
     }
   }
-  
-  
-// MENU
-  // Rectangle  
- //  fill(220, 20, 60, 90);
- //  rect(width/3, height/3, 600, 400, 40);
+  line(frameCount-1, 100-lastFrameY, frameCount, 100-frameRate);
+  lastFrameY = frameRate;
+}
+
+
+
+void Menu() {
+ // Rectangle  
+   fill(220, 20, 60, 90);
+   rect(width/2, height/2, 600, 400, 40);
   //Texte du menu
- //  fill(0, 0, 255);
- //  textSize(36);
- //  text("Cliquez sur Play pour commencer", 650, 450); 
-  // button(); //appel fonction du bouton
-}  
+   fill(0, 0, 255);
+   textSize(36);
+   text("cliquez sur Play", (width/2 - 45), (height/2 - 100));  
+   text("Pour commencer", (width/2 - 45), (height/2 - 150)); 
+   // Activer bouton 
+    bouton(); //appel fonction du bouton
+    
+}
+
+
+void mouseClicked() {
+ 
+  etat = 1;
+    
+  float x = width / 2;
+  float y = height / 2;
+  int w = 100;
+  int h = 50;
+ 
+ // Ne fonctionne pas pour l'instant
+  if ((mouseX > x) && (mouseX < x+w) && (mouseY > y) && (mouseY < y+h)) {
+    etat = 1;
+  }
+}
+
+
+
 
 
 void iteration() {
@@ -228,8 +293,8 @@ void keyPressed() {
       }
     }
   }
-  if (key == ' ') { // ON/OFF de pause (TOUCHE BARRE ESPACE ??)
-    pause = !pause;
+  if (etat == 2) { // ON/OFF de pause (TOUCHE BARRE ESPACE ??)
+    key = ' ';
   }
   if (key == 'c' || key == 'C') { // // Faire un clear all
     for (int x = 0; x < width/cellSize; x++) {
@@ -241,24 +306,75 @@ void keyPressed() {
 }
 
 
+
+
+
   /**
   *   Bouton Play FONCTIONNE PAS
   *   Ligne 171 - pour l'activer enlever les commentaires
   *   Si ACTIVE, n'affiche plus le jeu, QUE le carré bleu
   */
-void button() {
+void bouton() {
   
-  float x = width / 2.2;
-  float y = height / 1.9;
+  float x = width / 2;
+  float y = height / 2;
   int w = 100;
   int h = 50;
   
-   background(255);
-  rect(x, y, w, h);
-   fill(0, 0, 255);
-    if (mousePressed){
-     if (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h) {
-      print("Play");
-    }
+ // background(255);
+ rectMode(CENTER); 
+  fill(255, 0, 255);
+  rect(x, y, w, h);   
+ 
+  textSize(36);
+  fill(255, 255, 255);
+  textAlign(CENTER, CENTER);
+  text("Play", width/2, height/2, 400, 200); 
+}
+
+
+
+
+
+
+
+// Cette partie du code permet d'afficher la seconde fenêtre
+public class Graph extends PApplet {
+  
+  public void settings() {
+  size(300, 200);
+}
+  
+  
+void setup() {
+  //frameRate(1); To plot the graph at 1 point per second 
+  frameRate(30);
+  drawStuff();
+}
+
+
+void draw() {
+  //CHANGE THIS VARIABLE TO THE VARIABLE YOU WANNA PLOT:
+  float plotVar = -percentage;
+  stroke(255, 0, 0);
+  line(frameCount-1, (prevY+ 300), frameCount, (plotVar+ 200));
+  prevY = percentage;
+}
+ 
+//Permet de dessiner le graphique
+void drawStuff() {
+  background(0);
+  for (int i = 0; i <= width; i += 50) {
+    fill(0, 255, 0);
+    text(i/2, i-10, height-15);
+    stroke(255);
+    line(i, height, i, 1);
   }
+  for (int j = 0; j < height; j += 33) {
+    fill(0, 255, 0);
+    text(6-j/(height/6), 0, j);
+    stroke(255); 
+    line(0, j, width, j);
+  }
+}
 }
