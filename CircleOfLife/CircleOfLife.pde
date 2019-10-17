@@ -1,9 +1,17 @@
 import controlP5.*;
+import processing.serial.*;
 
 ControlP5 jControl;
 
+float prevY;
+
+float lastFrameY;
+
 float LivingCellCounter = 0;
 float DeadCellCounter = 0;
+float percentage = 0;
+float LivingCell = 0;
+float DeadCell = 0;
 
 // Pourcentage des cellules vivantes au début
 float probCellsAliveStart = 15;
@@ -26,7 +34,10 @@ boolean pause = false;
 
 // Taille de la fenêtre de l'executable
 public void settings() {
-    fullScreen();
+    size(1600, 900);
+    String[] args = {"TwoFrameTest"};
+    Graph sa = new Graph();
+    PApplet.runSketch(args, sa);
 }
 
 //variables for the colors of the background
@@ -64,7 +75,7 @@ void setup() {
   Slider sBl = jControl.addSlider("livingCellB", 0, 255, 0, 10, 240, 200, 30);
   
   Slider sRd = jControl.addSlider("deadCellR", 0, 255, 0, 10, 300, 200, 30);
-  Slider sGd = jControl.addSlider("deadCellG", 0, 255, 255, 10, 340, 200, 30);
+  Slider sGd = jControl.addSlider("deadCellG", 0, 255, 0, 10, 340, 200, 30);
   Slider sBd = jControl.addSlider("deadCellB", 0, 255, 0, 10, 380, 200, 30);
   
   Slider cell = jControl.addSlider("cellSize", 5, 20, 5, 10, 440, 200, 30);
@@ -111,13 +122,14 @@ void draw() {
       rect (x * cellSize, y * cellSize, cellSize, cellSize);
     }
   }
-  
-  
-  float percentage =  (LivingCellCounter / (LivingCellCounter + DeadCellCounter)) *100.0 ;
+  DeadCell = DeadCellCounter;
+  LivingCell = LivingCellCounter;
+
+  percentage =  (LivingCell / (LivingCell + DeadCell)) *100.0 ;
   percentage = percentage * 1000;
   percentage = round(percentage);
   percentage = percentage/1000;
-  print(round(LivingCellCounter) + " / " + round(DeadCellCounter) + " / " + percentage +"%"); 
+  print(round(LivingCell) + " / " + round(DeadCell) + " / " + percentage +"%"); 
   println();
  
   
@@ -157,6 +169,8 @@ void draw() {
       }
     }
   }
+    line(frameCount-1, 100-lastFrameY, frameCount, 100-frameRate);
+  lastFrameY = frameRate;
 }
 
 void iteration() {
@@ -224,3 +238,40 @@ void keyPressed() {
     }
   }
 }
+
+public class Graph extends PApplet {
+  
+  public void settings() {
+  size(300, 200);
+}
+  
+  void setup() {
+  //frameRate(1); To plot the graph at 1 point per second 
+  frameRate(30);
+  drawStuff();
+}
+void draw() {
+  //CHANGE THIS VARIABLE TO THE VARIABLE YOU WANNA PLOT:
+  float plotVar = -percentage;
+  stroke(255, 0, 0);
+  line(frameCount-1, (prevY+ 300), frameCount, (plotVar+ 200));
+  prevY = percentage;
+}
+ 
+void drawStuff() {
+  background(0);
+  for (int i = 0; i <= width; i += 50) {
+    fill(0, 255, 0);
+    text(i/2, i-10, height-15);
+    stroke(255);
+    line(i, height, i, 1);
+  }
+  for (int j = 0; j < height; j += 33) {
+    fill(0, 255, 0);
+    text(6-j/(height/6), 0, j);
+    stroke(255); 
+    line(0, j, width, j);
+  }
+}
+}
+  
