@@ -1,21 +1,6 @@
-// PROBLEMES A REGLES
-// Ajouter commentaires pour les variables et pour les lignes de code confuses
-// La pause en jeu ne fonctionne pas
-// On peut mettre play en cliquant n'importe où
-// Cellules ne bougent pas sur les lignes extérieures -> Pourquoi ??
-
-
 import controlP5.*;
 import processing.serial.*;
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> a774408f7d4256810695d68d1be11a6676e30306
 //test
-=======
-
->>>>>>> parent of 1f471ce... Graph
 ControlP5 jControl;
 
 float prevY;
@@ -45,7 +30,7 @@ int[][] cellsBuffer;
 
 //OPTION : 
 // Pause 
-int etat; // Si etat = 0 -> Début du jeu (JeuPause + Menu) ; etat = 1 -> Jeu qui tourne sans pause ; etat = 2 -> Pause dans le jeu
+boolean pause = false;
 
 // Taille de la fenêtre de l'executable
 public void settings() {
@@ -76,12 +61,8 @@ int cellSize = 5;
 // Couleur des cases mortes
 color dead = color(0);
 
-
-
-
-
 void setup() {
- 
+
   jControl = new ControlP5(this);
   
   //slider initiated
@@ -106,8 +87,6 @@ void setup() {
   cells = new int[width/cellSize][height/cellSize];
   cellsBuffer = new int[width/cellSize][height/cellSize];
 
-  // Dessiner le background en blanc
-
 
   // Initialisation des cellules
   for (int x = 0; x < width/cellSize; x++) {
@@ -126,27 +105,9 @@ void setup() {
 
 
 
-
 void draw() {
-<<<<<<< HEAD
-    
-  if (etat == 0) {
-    DessinerGrille();
-    Menu();
-  } else if (etat == 1) {
-    DessinerGrille();
-  } else if (etat == 2) { 
-    DessinerGrille();
-  }
-}
-
-
-
-
-void DessinerGrille() {
   
-=======
->>>>>>> parent of 02e853d... Merge branch 'master' of https://github.com/adatechschool/GameOfLife
+ 
   stroke(backgroundR, backgroundG, backgroundB);
   //Dessiner la grille
   for (int x = 0; x < width/cellSize; x++) {
@@ -175,109 +136,71 @@ void DessinerGrille() {
   LivingCellCounter = 0;
   DeadCellCounter = 0;
   // Itérer si la minuterie ..
-  if (millis( )- lastRecordedTime > interval) {
-    if (etat == 1) {
+  if (millis()-lastRecordedTime>interval) {
+    if (!pause) {
       iteration();
       lastRecordedTime = millis();
     }
   }
   
   // créer nouvelles cellules manuellement en pause
-  if ((etat == 2) && mousePressed) {
+  if (pause && mousePressed) {
     // Mapper et eviter les erreurs hots limites
     int xCellOver = int(map(mouseX, 0, width, 0, width/cellSize));
     xCellOver = constrain(xCellOver, 0, width/cellSize-1);
     int yCellOver = int(map(mouseY, 0, height, 0, height/cellSize));
     yCellOver = constrain(yCellOver, 0, height/cellSize-1);
 
+
     // Verifier les cellules dans le tampon
     if (cellsBuffer[xCellOver][yCellOver]==1) { // Cellule en vie
-      cells[xCellOver][yCellOver]=0; // Tuer
+      cells[xCellOver][yCellOver] = 0; // Tuer
       fill(dead); // remplir avec couleur de tuer
     }
     else { // Cellule morte
-      cells[xCellOver][yCellOver]=1; // Faire revivre
+      cells[xCellOver][yCellOver] = 1; // Faire revivre
       fill(livingCellR, livingCellG, livingCellB); // Remplir avec couleur de vie
     }
   }
-  else if ((etat == 2) && !mousePressed) { // Et puis sauvegarder dans le tampon une fois que la souris monte
+  else if (pause && !mousePressed) { // Et puis sauvegarder dans le tampon une fois que la souris monte
   // Sauvegarder les cellules dans le tampon (on opère donc avec un tableau en gardant l'autre intact)
-    for (int x=0; x<width/cellSize; x++) {
-      for (int y=0; y<height/cellSize; y++) {
+    for (int x = 0; x < width/cellSize; x++) {
+      for (int y = 0; y < height/cellSize; y++) {
         cellsBuffer[x][y] = cells[x][y];
       }
     }
   }
-<<<<<<< HEAD
-  line(frameCount-1, 100-lastFrameY, frameCount, 100-frameRate);
-  lastFrameY = frameRate;
-}
-
-
-
-void Menu() {
- // Rectangle  
-   fill(220, 20, 60, 90);
-   rect(width/2, height/2, 600, 400, 40);
-  //Texte du menu
-   fill(0, 0, 255);
-   textSize(36);
-   text("cliquez sur Play", (width/2 - 45), (height/2 - 100));  
-   text("Pour commencer", (width/2 - 45), (height/2 - 150)); 
-   // Activer bouton 
-    bouton(); //appel fonction du bouton
-    
-}
-
-
-void mouseClicked() {
- 
-  etat = 1;
-    
-  float x = width / 2;
-  float y = height / 2;
-  int w = 100;
-  int h = 50;
- 
- // Ne fonctionne pas pour l'instant
-  if ((mouseX > x) && (mouseX < x+w) && (mouseY > y) && (mouseY < y+h)) {
-    etat = 1;
-  }
-}
-
-
-
-=======
     line(frameCount-1, 100-lastFrameY, frameCount, 100-frameRate);
   lastFrameY = frameRate;
 }
->>>>>>> a774408f7d4256810695d68d1be11a6676e30306
+
 
 void iteration() {
   // Quand minuterie arrive à zero
   // Sauvegarder les cellules dans le tampon (on opère donc avec un tableau en gardant l'autre intact)
-  for (int x=0; x<width/cellSize; x++) {
-    for (int y=0; y<height/cellSize; y++) {
+  for (int x = 0; x < width/cellSize; x++) {
+    for (int y = 0; y < height/cellSize; y++) {
       cellsBuffer[x][y] = cells[x][y];
     }
   }
+  
   // Visiter chaque cellule
-  for (int x=0; x<width/cellSize; x++) {
-    for (int y=0; y<height/cellSize; y++) {
+  for (int x = 0; x < width/cellSize; x++) {
+    for (int y = 0; y < height/cellSize; y++) {
       // Visiter les voisins de chque cellule
       int neighbours = 0;//On compte les voisins
-      for (int xx=x-1; xx<=x+1; xx++) {
-        for (int yy=y-1; yy<=y+1; yy++) {
-          if (((xx>=0)&&(xx<width/cellSize))&&((yy>=0)&&(yy<height/cellSize))) {  // S'assurer qu'on reste dans les limites
-            if (!((xx==x)&&(yy==y))) {    // Verifier la cellule
-              if (cellsBuffer[xx][yy]==1) {
-                neighbours ++;   // Verfier les voisins
+      for (int xx = x-1; xx <= x+1; xx++) {
+        for (int yy = y-1; yy <= y+1; yy++) {
+          if (((xx >= 0) && (xx < width/cellSize)) && ((yy >= 0) && (yy < height/cellSize))) {  // S'assurer qu'on reste dans les limites
+            if (!((xx == x)&&(yy == y))) {    // Verifier la cellule
+              if (cellsBuffer[xx][yy] == 1) {
+                neighbours++;   // Verfier les voisins
               }
             } // End of if
           } // End of if
         } // End of yy loop
       } //End of xx loop
-      if (cellsBuffer[x][y]==1) {   // La cellule est en vie : la tuer si necessaire
+      if (cellsBuffer[x][y] == 1) {   // La cellule est en vie : la tuer si necessaire
         if (neighbours < 2 || neighbours > 3) {
           cells[x][y] = 0;   // Mourir sauf si il a 2/3 voisins
         }
@@ -290,13 +213,14 @@ void iteration() {
   } // End of x loop
 } // End of function
 
+
 // OPTION : 
 // Si on allume manuellement une cellule
 void keyPressed() {
-  if (key=='r' || key == 'R') {
+  if (key == 'r' || key == 'R') {
     // Restart : réinitialisation des cellules (TOUCHE 'R' ??)
-    for (int x=0; x<width/cellSize; x++) {
-      for (int y=0; y<height/cellSize; y++) {
+    for (int x = 0; x < width/cellSize; x++) {
+      for (int y = 0; y < height/cellSize; y++) {
         float state = random (100);
         if (state > probCellsAliveStart) {
           state = 0;
@@ -307,35 +231,18 @@ void keyPressed() {
       }
     }
   }
-<<<<<<< HEAD
-  if (etat == 2) { // ON/OFF de pause (TOUCHE BARRE ESPACE ??)
-    key = ' ';
-=======
-  if (key==' ') { // ON/OFF de pause (TOUCHE BARRE ESPACE ??)
+  if (key == ' ') { // ON/OFF de pause (TOUCHE BARRE ESPACE ??)
     pause = !pause;
->>>>>>> parent of 02e853d... Merge branch 'master' of https://github.com/adatechschool/GameOfLife
   }
-  if (key=='c' || key == 'C') { // // Faire un clear all
-    for (int x=0; x<width/cellSize; x++) {
-      for (int y=0; y<height/cellSize; y++) {
+  if (key == 'c' || key == 'C') { // // Faire un clear all
+    for (int x = 0; x < width/cellSize; x++) {
+      for (int y = 0; y < height/cellSize; y++) {
         cells[x][y] = 0; // Tout remettre à zeros
       }
     }
   }
 }
 
-<<<<<<< HEAD
-
-
-
-
-  /**
-  *   Bouton Play FONCTIONNE PAS
-  *   Ligne 171 - pour l'activer enlever les commentaires
-  *   Si ACTIVE, n'affiche plus le jeu, QUE le carré bleu
-  */
-void bouton() {
-=======
 public class Graph extends PApplet {
   
   public void settings() {
@@ -372,71 +279,19 @@ void drawStuff() {
 }
 }
   
-<<<<<<< HEAD
 void button() {
->>>>>>> a774408f7d4256810695d68d1be11a6676e30306
   
-  float x = width / 2;
-  float y = height / 2;
+  float x = width / 2.2;
+  float y = height / 1.9;
   int w = 100;
   int h = 50;
   
- // background(255);
- rectMode(CENTER); 
-  fill(255, 0, 255);
-  rect(x, y, w, h);   
- 
-  textSize(36);
-  fill(255, 255, 255);
-  textAlign(CENTER, CENTER);
-  text("Play", width/2, height/2, 400, 200); 
-}
-
-
-
-
-
-
-
-// Cette partie du code permet d'afficher la seconde fenêtre
-public class Graph extends PApplet {
-  
-  public void settings() {
-  size(300, 200);
-}
-  
-  
-void setup() {
-  //frameRate(1); To plot the graph at 1 point per second 
-  frameRate(30);
-  drawStuff();
-}
-
-
-void draw() {
-  //CHANGE THIS VARIABLE TO THE VARIABLE YOU WANNA PLOT:
-  float plotVar = -percentage;
-  stroke(255, 0, 0);
-  line(frameCount-1, (prevY+ 300), frameCount, (plotVar+ 200));
-  prevY = percentage;
-}
- 
-//Permet de dessiner le graphique
-void drawStuff() {
-  background(0);
-  for (int i = 0; i <= width; i += 50) {
-    fill(0, 255, 0);
-    text(i/2, i-10, height-15);
-    stroke(255);
-    line(i, height, i, 1);
-  }
-  for (int j = 0; j < height; j += 33) {
-    fill(0, 255, 0);
-    text(6-j/(height/6), 0, j);
-    stroke(255); 
-    line(0, j, width, j);
+   background(255);
+  rect(x, y, w, h);
+   fill(0, 0, 255);
+    if (mousePressed){
+     if (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h) {
+      print("Play");
+    }
   }
 }
-}
-=======
->>>>>>> parent of 02e853d... Merge branch 'master' of https://github.com/adatechschool/GameOfLife
