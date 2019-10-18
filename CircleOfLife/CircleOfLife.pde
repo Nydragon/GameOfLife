@@ -34,7 +34,7 @@ boolean pause = false;
 
 // Taille de la fenêtre de l'executable
 public void settings() {
-    size(1600, 900);
+    size(1000, 1000);
     String[] args = {"TwoFrameTest"};
     Graph sa = new Graph();
     PApplet.runSketch(args, sa);
@@ -278,7 +278,7 @@ void drawStuff() {
   }
 }
 }
-  
+ /* 
 void button() {
   
   float x = width / 2.2;
@@ -294,4 +294,4 @@ void button() {
       print("Play");
     }
   }
-}
+}*/
