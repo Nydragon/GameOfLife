@@ -6,7 +6,7 @@
 
 import controlP5.*;
 import processing.serial.*;
-
+ControlP5 cp5;
 //test
 ControlP5 jControl;
 
@@ -28,7 +28,7 @@ int interval = 50;
 int lastRecordedTime = 0;
 
 // Vitesse d'apparition des cellules
-int speed = 5;
+int speed = 0;
 
 
 // Tableau de cellules
@@ -38,7 +38,7 @@ int[][] cellsBuffer;
 
 //OPTION : 
 // Pause 
-int etat; // Si etat = 0 -> Début du jeu (JeuPause + Menu) ; etat = 1 -> Jeu qui tourne sans pause ; etat = 2 -> Pause dans le jeu
+int etat = 0; // Si etat = 0 -> Début du jeu (JeuPause + Menu) ; etat = 1 -> Jeu qui tourne sans pause ; etat = 2 -> Pause dans le jeu
 
 // Taille de la fenêtre de l'executable
 public void settings() {
@@ -70,6 +70,13 @@ int cellSize = 5;
 color dead = color(0);
 
 void setup() {
+  cp5 = new ControlP5(this);
+  cp5.addButton("play")
+     .setValue(128)
+     .setPosition(width/2-50,height/2-50)
+     .updateSize()
+     .setSize(100,50)
+     ;
 
   jControl = new ControlP5(this);
   
@@ -116,13 +123,16 @@ void setup() {
   background(255); // Remplir en blanc si les cases ne couvrent pas toutes les fenêtres
 }
 
-
-
+public void play(int theValue) {
+  println("a button event from buttonB: "+theValue);
+    if(theValue == 128) {
+    speed = 10;
+  }
+}
 void draw() {
-  
+ 
  if (etat == 0) {
     DessinerGrille();
-    Menu();
   } else if (etat == 1) {
     DessinerGrille();
   } else if (etat == 2) { 
@@ -201,40 +211,6 @@ void DessinerGrille() {
 }
 
 
-void Menu () {
-  
-  // Rectangle  
-   fill(220, 20, 60, 95);
-   rect(width/2, height/2, 600, 400, 40);
-   
-  // Texte du menu
-   fill(121, 248, 248);
-   textSize(36);
-   text("cliquez sur Play", (width/2 - 45), (height/2 - 100));  
-   text("Pour commencer", (width/2 - 45), (height/2 - 150)); 
-   
-  // Activer bouton 
-   button(); //appel fonction du bouton
-  
-}
-
-
-void mouseClicked() {
-
-  etat = 1;
-
-  float x = width / 2;
-  float y = height / 2;
-  int w = 100;
-  int h = 50;
-
- // Ne fonctionne pas pour l'instant !!!!!!!!! Sert à pouvoir cliquer QUE sur le bouton
-  if ((mouseX > x) && (mouseX < x+w) && (mouseY > y) && (mouseY < y+h)) {
-    etat = 1;
-  }
-}
-
-
 
 void iteration() {
  // Quand minuterie arrive à zero
@@ -305,7 +281,7 @@ void keyPressed() {
   }
 }
 
-
+/*
 // Fonction pour le bouton play
 void button() {
   
@@ -326,7 +302,7 @@ void button() {
   text("Play", width/2, height/2, 400, 200); 
 }
 
-
+*/
 
 
 // CODE POUR LA FENETRE DU GRAPH
