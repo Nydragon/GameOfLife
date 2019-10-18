@@ -8,10 +8,14 @@
 import controlP5.*;
 import processing.serial.*;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> a774408f7d4256810695d68d1be11a6676e30306
 //test
+=======
+
+>>>>>>> parent of 1f471ce... Graph
 ControlP5 jControl;
 
 float prevY;
