@@ -77,7 +77,7 @@ color dead = color(0);
 
 
 void setup() {
-
+ 
   jControl = new ControlP5(this);
   
   //slider initiated
@@ -102,6 +102,8 @@ void setup() {
   cells = new int[width/cellSize][height/cellSize];
   cellsBuffer = new int[width/cellSize][height/cellSize];
 
+  // Dessiner le background en blanc
+
 
   // Initialisation des cellules
   for (int x = 0; x < width/cellSize; x++) {
@@ -122,6 +124,7 @@ void setup() {
 
 
 void draw() {
+<<<<<<< HEAD
     
   if (etat == 0) {
     DessinerGrille();
@@ -138,6 +141,8 @@ void draw() {
 
 void DessinerGrille() {
   
+=======
+>>>>>>> parent of 02e853d... Merge branch 'master' of https://github.com/adatechschool/GameOfLife
   stroke(backgroundR, backgroundG, backgroundB);
   //Dessiner la grille
   for (int x = 0; x < width/cellSize; x++) {
@@ -181,21 +186,20 @@ void DessinerGrille() {
     int yCellOver = int(map(mouseY, 0, height, 0, height/cellSize));
     yCellOver = constrain(yCellOver, 0, height/cellSize-1);
 
-
     // Verifier les cellules dans le tampon
     if (cellsBuffer[xCellOver][yCellOver]==1) { // Cellule en vie
-      cells[xCellOver][yCellOver] = 0; // Tuer
+      cells[xCellOver][yCellOver]=0; // Tuer
       fill(dead); // remplir avec couleur de tuer
     }
     else { // Cellule morte
-      cells[xCellOver][yCellOver] = 1; // Faire revivre
+      cells[xCellOver][yCellOver]=1; // Faire revivre
       fill(livingCellR, livingCellG, livingCellB); // Remplir avec couleur de vie
     }
   }
   else if ((etat == 2) && !mousePressed) { // Et puis sauvegarder dans le tampon une fois que la souris monte
   // Sauvegarder les cellules dans le tampon (on opère donc avec un tableau en gardant l'autre intact)
-    for (int x = 0; x < width/cellSize; x++) {
-      for (int y = 0; y < height/cellSize; y++) {
+    for (int x=0; x<width/cellSize; x++) {
+      for (int y=0; y<height/cellSize; y++) {
         cellsBuffer[x][y] = cells[x][y];
       }
     }
@@ -245,33 +249,31 @@ void mouseClicked() {
 }
 >>>>>>> a774408f7d4256810695d68d1be11a6676e30306
 
-
 void iteration() {
   // Quand minuterie arrive à zero
   // Sauvegarder les cellules dans le tampon (on opère donc avec un tableau en gardant l'autre intact)
-  for (int x = 0; x < width/cellSize; x++) {
-    for (int y = 0; y < height/cellSize; y++) {
+  for (int x=0; x<width/cellSize; x++) {
+    for (int y=0; y<height/cellSize; y++) {
       cellsBuffer[x][y] = cells[x][y];
     }
   }
-  
   // Visiter chaque cellule
-  for (int x = 0; x < width/cellSize; x++) {
-    for (int y = 0; y < height/cellSize; y++) {
+  for (int x=0; x<width/cellSize; x++) {
+    for (int y=0; y<height/cellSize; y++) {
       // Visiter les voisins de chque cellule
       int neighbours = 0;//On compte les voisins
-      for (int xx = x-1; xx <= x+1; xx++) {
-        for (int yy = y-1; yy <= y+1; yy++) {
-          if (((xx >= 0) && (xx < width/cellSize)) && ((yy >= 0) && (yy < height/cellSize))) {  // S'assurer qu'on reste dans les limites
-            if (!((xx == x)&&(yy == y))) {    // Verifier la cellule
-              if (cellsBuffer[xx][yy] == 1) {
-                neighbours++;   // Verfier les voisins
+      for (int xx=x-1; xx<=x+1; xx++) {
+        for (int yy=y-1; yy<=y+1; yy++) {
+          if (((xx>=0)&&(xx<width/cellSize))&&((yy>=0)&&(yy<height/cellSize))) {  // S'assurer qu'on reste dans les limites
+            if (!((xx==x)&&(yy==y))) {    // Verifier la cellule
+              if (cellsBuffer[xx][yy]==1) {
+                neighbours ++;   // Verfier les voisins
               }
             } // End of if
           } // End of if
         } // End of yy loop
       } //End of xx loop
-      if (cellsBuffer[x][y] == 1) {   // La cellule est en vie : la tuer si necessaire
+      if (cellsBuffer[x][y]==1) {   // La cellule est en vie : la tuer si necessaire
         if (neighbours < 2 || neighbours > 3) {
           cells[x][y] = 0;   // Mourir sauf si il a 2/3 voisins
         }
@@ -284,14 +286,13 @@ void iteration() {
   } // End of x loop
 } // End of function
 
-
 // OPTION : 
 // Si on allume manuellement une cellule
 void keyPressed() {
-  if (key == 'r' || key == 'R') {
+  if (key=='r' || key == 'R') {
     // Restart : réinitialisation des cellules (TOUCHE 'R' ??)
-    for (int x = 0; x < width/cellSize; x++) {
-      for (int y = 0; y < height/cellSize; y++) {
+    for (int x=0; x<width/cellSize; x++) {
+      for (int y=0; y<height/cellSize; y++) {
         float state = random (100);
         if (state > probCellsAliveStart) {
           state = 0;
@@ -302,12 +303,17 @@ void keyPressed() {
       }
     }
   }
+<<<<<<< HEAD
   if (etat == 2) { // ON/OFF de pause (TOUCHE BARRE ESPACE ??)
     key = ' ';
+=======
+  if (key==' ') { // ON/OFF de pause (TOUCHE BARRE ESPACE ??)
+    pause = !pause;
+>>>>>>> parent of 02e853d... Merge branch 'master' of https://github.com/adatechschool/GameOfLife
   }
-  if (key == 'c' || key == 'C') { // // Faire un clear all
-    for (int x = 0; x < width/cellSize; x++) {
-      for (int y = 0; y < height/cellSize; y++) {
+  if (key=='c' || key == 'C') { // // Faire un clear all
+    for (int x=0; x<width/cellSize; x++) {
+      for (int y=0; y<height/cellSize; y++) {
         cells[x][y] = 0; // Tout remettre à zeros
       }
     }
@@ -362,6 +368,7 @@ void drawStuff() {
 }
 }
   
+<<<<<<< HEAD
 void button() {
 >>>>>>> a774408f7d4256810695d68d1be11a6676e30306
   
@@ -427,3 +434,5 @@ void drawStuff() {
   }
 }
 }
+=======
+>>>>>>> parent of 02e853d... Merge branch 'master' of https://github.com/adatechschool/GameOfLife
