@@ -79,30 +79,30 @@ void setup() {
      ;
 
   jControl = new ControlP5(this);
-  
+
  //slider initiated
   // Slider couleur de l'arrière-plan
   jControl.addSlider("backgroundR", 0, 255, 0, 10, 10, 200, 30);  
   jControl.addSlider("backgroundG", 0, 255, 0, 10, 50, 200, 30);
   jControl.addSlider("backgroundB", 0, 255, 0, 10, 90, 200, 30);
-  
+
   // Slider couleur cellules vivantes
   jControl.addSlider("livingCellR", 0, 255, 0, 10, 160, 200, 30);
   jControl.addSlider("livingCellG", 0, 255, 255, 10, 200, 200, 30);
   jControl.addSlider("livingCellB", 0, 255, 0, 10, 240, 200, 30);
-  
+
   // Slider couleur cellules morte
   jControl.addSlider("deadCellR", 0, 255, 0, 10, 300, 200, 30);
   jControl.addSlider("deadCellG", 0, 255, 0, 10, 340, 200, 30);
   jControl.addSlider("deadCellB", 0, 255, 0, 10, 380, 200, 30);
-  
+
   // Slider taille cellule
-  Slider cell = jControl.addSlider("cellSize", 5, 20, 5, 10, 440, 200, 30);
-  
+  jControl.addSlider("cellSize", 5, 20, 5, 10, 440, 200, 30);
+
   // Slider vitesse apparition cellules
-  Slider sp = jControl.addSlider("interval", 100, 1000, 300, 10, 500, 200, 30);
-  
-  
+  jControl.addSlider("interval", 100, 1000, 300, 10, 500, 200, 30);
+
+
   // Initialisation des tableaux
   cells = new int[width/cellSize][height/cellSize];
   cellsBuffer = new int[width/cellSize][height/cellSize];
@@ -142,7 +142,7 @@ void draw() {
 
 
 void DessinerGrille() { 
-  
+
   stroke(backgroundR, backgroundG, backgroundB);
  //Dessiner la grille
   for (int x = 0; x < width/cellSize; x++) {
@@ -167,7 +167,7 @@ void DessinerGrille() {
   print(round(LivingCell) + " / " + round(DeadCell) + " / " + percentage +"%"); 
   println();
  
-  
+
   LivingCellCounter = 0;
   DeadCellCounter = 0;
  // Itérer si la minuterie ..
@@ -177,7 +177,7 @@ void DessinerGrille() {
       lastRecordedTime = millis();
     }
   }
-  
+
  // créer nouvelles cellules manuellement en pause
   if (etat == 1 && mousePressed) {
     // Mapper et eviter les erreurs hots limites
@@ -207,7 +207,7 @@ void DessinerGrille() {
   }
     line(frameCount-1, 100-lastFrameY, frameCount, 100-frameRate);
   lastFrameY = frameRate;
-  
+
 }
 
 
@@ -220,7 +220,7 @@ void iteration() {
       cellsBuffer[x][y] = cells[x][y];
     }
   }
-  
+
  // Visiter chaque cellule
   for (int x = 0; x < width/cellSize; x++) {
     for (int y = 0; y < height/cellSize; y++) {
@@ -284,7 +284,7 @@ void keyPressed() {
 /*
 // Fonction pour le bouton play
 void button() {
-  
+
   float x = width / 2;
   float y = height / 2;
   int w = 100;
@@ -307,11 +307,11 @@ void button() {
 
 // CODE POUR LA FENETRE DU GRAPH
 public class Graph extends PApplet {
-  
+
   public void settings() {
   size(300, 200);
 }
-  
+
   void setup() {
   //frameRate(1); To plot the graph at 1 point per second 
   frameRate(30);
