@@ -82,19 +82,19 @@ void setup() {
   
  //slider initiated
   // Slider couleur de l'arrière-plan
-  Slider sR = jControl.addSlider("backgroundR", 0, 255, 0, 10, 10, 200, 30);  
-  Slider sG = jControl.addSlider("backgroundG", 0, 255, 0, 10, 50, 200, 30);
-  Slider sB = jControl.addSlider("backgroundB", 0, 255, 0, 10, 90, 200, 30);
+  jControl.addSlider("backgroundR", 0, 255, 0, 10, 10, 200, 30);  
+  jControl.addSlider("backgroundG", 0, 255, 0, 10, 50, 200, 30);
+  jControl.addSlider("backgroundB", 0, 255, 0, 10, 90, 200, 30);
   
   // Slider couleur cellules vivantes
-  Slider sRl = jControl.addSlider("livingCellR", 0, 255, 0, 10, 160, 200, 30);
-  Slider sGl = jControl.addSlider("livingCellG", 0, 255, 255, 10, 200, 200, 30);
-  Slider sBl = jControl.addSlider("livingCellB", 0, 255, 0, 10, 240, 200, 30);
+  jControl.addSlider("livingCellR", 0, 255, 0, 10, 160, 200, 30);
+  jControl.addSlider("livingCellG", 0, 255, 255, 10, 200, 200, 30);
+  jControl.addSlider("livingCellB", 0, 255, 0, 10, 240, 200, 30);
   
   // Slider couleur cellules morte
-  Slider sRd = jControl.addSlider("deadCellR", 0, 255, 0, 10, 300, 200, 30);
-  Slider sGd = jControl.addSlider("deadCellG", 0, 255, 0, 10, 340, 200, 30);
-  Slider sBd = jControl.addSlider("deadCellB", 0, 255, 0, 10, 380, 200, 30);
+  jControl.addSlider("deadCellR", 0, 255, 0, 10, 300, 200, 30);
+  jControl.addSlider("deadCellG", 0, 255, 0, 10, 340, 200, 30);
+  jControl.addSlider("deadCellB", 0, 255, 0, 10, 380, 200, 30);
   
   // Slider taille cellule
   Slider cell = jControl.addSlider("cellSize", 5, 20, 5, 10, 440, 200, 30);
