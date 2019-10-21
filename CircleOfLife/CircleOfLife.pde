@@ -37,7 +37,7 @@ int[][] cellsBuffer;
 
 //OPTION :
 // Pause
-int etat = 0; // Si etat = 0 -> Début du jeu (JeuPause + Menu) ; etat = 1 -> Jeu qui tourne sans pause ; etat = 2 -> Éditer le tableau
+boolean pause = false; // Si pause = false -> Début du jeu (JeuPause + Menu) ; pause = true -> Jeu qui tourne sans pause ; pause = 2 -> Éditer le tableau
 
 // Taille de la fenêtre de l'executable
 public void settings() {
@@ -82,22 +82,23 @@ void setup() {
 
  //slider initiated
   // Slider couleur de l'arrière-plan
-  jControl.addSlider("backgroundR", 0, 255, 0, 10, 10, 200, 30);
-  jControl.addSlider("backgroundG", 0, 255, 0, 10, 50, 200, 30);
-  jControl.addSlider("backgroundB", 0, 255, 0, 10, 90, 200, 30);
+  // addSlider(nom de la fenêtre, min, max, valeur par défaut, x1, y1, x2, y2)
+  jControl.addSlider("backgroundR", 0, 255, backgroundR, 10, 10, 200, 30);
+  jControl.addSlider("backgroundG", 0, 255, backgroundG, 10, 50, 200, 30);
+  jControl.addSlider("backgroundB", 0, 255, backgroundB, 10, 90, 200, 30);
 
   // Slider couleur cellules vivantes
-  jControl.addSlider("livingCellR", 0, 255, 0, 10, 160, 200, 30);
-  jControl.addSlider("livingCellG", 0, 255, 255, 10, 200, 200, 30);
-  jControl.addSlider("livingCellB", 0, 255, 0, 10, 240, 200, 30);
+  jControl.addSlider("livingCellR", 0, 255, livingCellR, 10, 160, 200, 30);
+  jControl.addSlider("livingCellG", 0, 255, livingCellG, 10, 200, 200, 30);
+  jControl.addSlider("livingCellB", 0, 255, livingCellB, 10, 240, 200, 30);
 
   // Slider couleur cellules morte
-  jControl.addSlider("deadCellR", 0, 255, 0, 10, 300, 200, 30);
-  jControl.addSlider("deadCellG", 0, 255, 0, 10, 340, 200, 30);
-  jControl.addSlider("deadCellB", 0, 255, 0, 10, 380, 200, 30);
+  jControl.addSlider("deadCellR", 0, 255, deadCellR, 10, 300, 200, 30);
+  jControl.addSlider("deadCellG", 0, 255, deadCellG, 10, 340, 200, 30);
+  jControl.addSlider("deadCellB", 0, 255, deadCellB, 10, 380, 200, 30);
 
   // Slider taille cellule
-  jControl.addSlider("cellSize", 5, 20, 5, 10, 440, 200, 30);
+  jControl.addSlider("cellSize", 5, 20, cellSize, 10, 440, 200, 30);
 
   // Slider vitesse apparition cellules
   jControl.addSlider("interval", 100, 1000, 300, 10, 500, 200, 30);
@@ -125,12 +126,9 @@ void setup() {
 
 public void play(int theValue) {
   println("a button event from buttonB: "+theValue);
-    if(theValue == 128) {
+  if(theValue == 128) {
     speed = 10;
-    if(etat == 1)
-      etat = 0;
-    else if(etat == 0)
-      etat = 1;
+    pause = !pause;
   }
 }
 void draw() {
@@ -161,14 +159,14 @@ void draw() {
   DeadCellCounter = 0;
  // Itérer si la minuterie ..
   if (millis() - lastRecordedTime > interval) {
-    if (etat == 1) {
+    if (pause == true) {
       iteration();
       lastRecordedTime = millis();
     }
   }
 
   // créer nouvelles cellules manuellement en pause
-  if (etat == 0 && mousePressed) {
+  if (pause == false && mousePressed) {
     // Mapper et eviter les erreurs hots limites
     int xCellOver = int(map(mouseX, 0, width, 0, width/cellSize));
     xCellOver = constrain(xCellOver, 0, width/cellSize-1);
@@ -183,7 +181,7 @@ void draw() {
       cells[xCellOver][yCellOver] = 1; // Faire revivre
       fill(livingCellR, livingCellG, livingCellB); // Remplir avec couleur de vie
     }
-  } else if (etat == 1 && !mousePressed) { // Et puis sauvegarder dans le tampon une fois que la souris monte
+  } else if (pause == true && !mousePressed) { // Et puis sauvegarder dans le tampon une fois que la souris monte
   // Sauvegarder les cellules dans le tampon (on opère donc avec un tableau en gardant l'autre intact)
     for (int x = 0; x < width/cellSize; x++) {
       for (int y = 0; y < height/cellSize; y++) {
@@ -252,7 +250,7 @@ void keyPressed() {
       }
     }
   }
-  if (etat == 1) { // ON/OFF de pause (TOUCHE BARRE ESPACE ??)
+  if (pause == true) { // ON/OFF de pause (TOUCHE BARRE ESPACE ??)
     key = ' ';
   }
   if (key == 'c' || key == 'C') { // // Faire un clear all
