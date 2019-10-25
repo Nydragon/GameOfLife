@@ -32,30 +32,19 @@ int[][] cellsBuffer;
 
 //OPTION :
 // togglePause
-boolean togglePause = false; // Si togglePause = false -> Début du jeu (JeutogglePause + Menu) ; togglePause = true -> Jeu qui tourne sans togglePause ; togglePause = 2 -> Éditer le tableau
+boolean togglePause = false;
 
 // Taille de la fenêtre de l'executable
 public void settings() {
   size(800, 600);
- // String[] args = {"TwoFrameTest"};
-  //Graph sa = new Graph();
- // PApplet.runSketch(args, sa);
+//  String[] args = {"TwoFrameTest"};
+//  Graph sa = new Graph();
+//  PApplet.runSketch(args, sa);
 }
 
-//variables for the colors of the background
-int backgroundR = 0;
-int backgroundG = 0;
-int backgroundB = 0;
-
-//variables for the colors of the dead cells
-int deadCellR = 0;
-int deadCellG = 0;
-int deadCellB = 0;
-
-//variables for the colors of the dead cells
-int livingCellR = 0;
-int livingCellG = 255;
-int livingCellB = 0;
+int backgroundR = 0, backgroundG = 0,   backgroundB = 0;
+int deadCellR = 0,   deadCellG = 0,     deadCellB = 0;
+int livingCellR = 0, livingCellG = 255, livingCellB = 0;
 
 // Taille des cellules
 int cellSize = 5;
@@ -66,34 +55,34 @@ color dead = color(0);
 void setup() {
   cp5 = new ControlP5(this);
   cp5.addToggle("togglePause")
-     .setPosition(40,100)
-     .setSize(50,20);
-
+    .setPosition(10,10)
+    .setImages(loadImage("disabled.png"), loadImage("disabled.png"), loadImage("enabled.png"))
+    .updateSize();
 
   jControl = new ControlP5(this);
   /*
- //slider initiated
-   // Slider couleur de l'arrière-plan
-   // addSlider(nom de la fenêtre, min, max, valeur par défaut, x1, y1, x2, y2)
-   jControl.addSlider("backgroundR", 0, 255, backgroundR, 10, 10, 200, 30);
-   jControl.addSlider("backgroundG", 0, 255, backgroundG, 10, 50, 200, 30);
-   jControl.addSlider("backgroundB", 0, 255, backgroundB, 10, 90, 200, 30);
-   
-   // Slider couleur cellules vivantes
-   jControl.addSlider("livingCellR", 0, 255, livingCellR, 10, 160, 200, 30);
-   jControl.addSlider("livingCellG", 0, 255, livingCellG, 10, 200, 200, 30);
-   jControl.addSlider("livingCellB", 0, 255, livingCellB, 10, 240, 200, 30);
-   
-   // Slider couleur cellules morte
-   jControl.addSlider("deadCellR", 0, 255, deadCellR, 10, 300, 200, 30);
-   jControl.addSlider("deadCellG", 0, 255, deadCellG, 10, 340, 200, 30);
-   jControl.addSlider("deadCellB", 0, 255, deadCellB, 10, 380, 200, 30);
-   
-   // Slider taille cellule
-   jControl.addSlider("cellSize", 5, 20, cellSize, 10, 440, 200, 30);
-   
-   // Slider vitesse apparition cellules
-   jControl.addSlider("interval", 100, 1000, 300, 10, 500, 200, 30);
+  //slider initiated
+  // Slider couleur de l'arrière-plan
+  // addSlider(nom de la fenêtre, min, max, valeur par défaut, x1, y1, x2, y2)
+  jControl.addSlider("backgroundR", 0, 255, backgroundR, 10, 10, 200, 30);
+  jControl.addSlider("backgroundG", 0, 255, backgroundG, 10, 50, 200, 30);
+  jControl.addSlider("backgroundB", 0, 255, backgroundB, 10, 90, 200, 30);
+
+  // Slider couleur cellules vivantes
+  jControl.addSlider("livingCellR", 0, 255, livingCellR, 10, 160, 200, 30);
+  jControl.addSlider("livingCellG", 0, 255, livingCellG, 10, 200, 200, 30);
+  jControl.addSlider("livingCellB", 0, 255, livingCellB, 10, 240, 200, 30);
+
+  // Slider couleur cellules morte
+  jControl.addSlider("deadCellR", 0, 255, deadCellR, 10, 300, 200, 30);
+  jControl.addSlider("deadCellG", 0, 255, deadCellG, 10, 340, 200, 30);
+  jControl.addSlider("deadCellB", 0, 255, deadCellB, 10, 380, 200, 30);
+
+  // Slider taille cellule
+  jControl.addSlider("cellSize", 5, 20, cellSize, 10, 440, 200, 30);
+
+  // Slider vitesse apparition cellules
+  jControl.addSlider("interval", 100, 1000, 300, 10, 500, 200, 30);
    */
 
   // Initialisation des tableaux
@@ -146,7 +135,6 @@ void draw() {
   // Itérer si la minuterie ..
   if (millis() - lastRecordedTime > interval) {
     if (togglePause == true) {
-      println ("vrai");
       iteration();
       lastRecordedTime = millis();
     }
@@ -249,26 +237,3 @@ void keyPressed() {
     }
   }
 }
-
-/*
-// Fonction pour le bouton play
- void button() {
- 
- float x = width / 2;
- float y = height / 2;
- int w = 100;
- int h = 50;
- 
- // Rectangle du bouton
- rectMode(CENTER);
- fill(255, 0, 255);
- rect(x, y, w, h);
- 
- // Texte du bouton
- textSize(36);
- fill(255, 255, 255);
- textAlign(CENTER, CENTER);
- text("Play", width/2, height/2, 400, 200);
- }
- 
- */
