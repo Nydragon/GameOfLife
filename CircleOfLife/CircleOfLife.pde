@@ -7,6 +7,8 @@ import controlP5.*;
 ControlP5 cp5;
 ControlP5 jControl;
 
+Toggle boutonPlay;
+
 
 float prevY;
 
@@ -54,10 +56,10 @@ color dead = color(0);
 
 void setup() {
   cp5 = new ControlP5(this);
-  cp5.addToggle("togglePause")
-    .setPosition(10,10)
-    .setImages(loadImage("disabled.png"), loadImage("disabled.png"), loadImage("enabled.png"))
-    .updateSize();
+  boutonPlay = cp5.addToggle("togglePause")
+                   .setPosition(10,10)
+                   .setImages(loadImage("disabled.png"), loadImage("disabled.png"), loadImage("enabled.png"))
+                   .updateSize();
 
   jControl = new ControlP5(this);
   /*
@@ -91,10 +93,10 @@ void setup() {
 
 
   // Initialisation des cellules
-  for (int x = 0; x < width/cellSize; x++) {
-    for (int y = 0; y < height/cellSize; y++) {
+  for(int x = 0; x < width/cellSize; x++) {
+    for(int y = 0; y < height/cellSize; y++) {
       float state = random (100);
-      if (state > probCellsAliveStart) {
+      if(state > probCellsAliveStart) {
         state = 0;
       } else {
         state = 1;
@@ -109,9 +111,9 @@ void setup() {
 void draw() {
   stroke(backgroundR, backgroundG, backgroundB);
   //Dessiner la grille
-  for (int x = 0; x < width/cellSize; x++) {
-    for (int y = 0; y < height/cellSize; y++) {
-      if (cells[x][y] == 1) {
+  for(int x = 0; x < width/cellSize; x++) {
+    for(int y = 0; y < height/cellSize; y++) {
+      if(cells[x][y] == 1) {
         LivingCellCounter++;
         fill(livingCellR, livingCellG, livingCellB); // Cellule vivante
       } else {
@@ -133,15 +135,15 @@ void draw() {
   LivingCellCounter = 0;
   DeadCellCounter = 0;
   // Itérer si la minuterie ..
-  if (millis() - lastRecordedTime > interval) {
-    if (togglePause == true) {
+  if(millis() - lastRecordedTime > interval) {
+    if(togglePause) {
       iteration();
       lastRecordedTime = millis();
     }
   }
 
   // créer nouvelles cellules manuellement en togglePause
-  if (togglePause == false && mousePressed) {
+  if(togglePause == false && mousePressed) {
 
     // Mapper et eviter les erreurs hots limites
     int xCellOver = int(map(mouseX, 0, width, 0, width/cellSize));
@@ -150,17 +152,17 @@ void draw() {
     yCellOver = constrain(yCellOver, 0, height/cellSize-1);
 
     // Verifier les cellules dans le tampon
-    if (cellsBuffer[xCellOver][yCellOver] == 1) { // Cellule en vie
+    if(cellsBuffer[xCellOver][yCellOver] == 1) { // Cellule en vie
       cells[xCellOver][yCellOver] = 0; // Tuer
       fill(dead); // remplir avec couleur de tuer
     } else { // Cellule morte
       cells[xCellOver][yCellOver] = 1; // Faire revivre
       fill(livingCellR, livingCellG, livingCellB); // Remplir avec couleur de vie
     }
-  } else if (togglePause == true && !mousePressed) { // Et puis sauvegarder dans le tampon une fois que la souris monte
+  } else if(togglePause && !mousePressed) { // Et puis sauvegarder dans le tampon une fois que la souris monte
     // Sauvegarder les cellules dans le tampon (on opère donc avec un tableau en gardant l'autre intact)
-    for (int x = 0; x < width/cellSize; x++) {
-      for (int y = 0; y < height/cellSize; y++) {
+    for(int x = 0; x < width/cellSize; x++) {
+      for(int y = 0; y < height/cellSize; y++) {
         cellsBuffer[x][y] = cells[x][y];
       }
     }
@@ -172,34 +174,34 @@ void draw() {
 void iteration() {
   // Quand minuterie arrive à zero
   // Sauvegarder les cellules dans le tampon (on opère donc avec un tableau en gardant l'autre intact)
-  for (int x = 0; x < width/cellSize; x++) {
-    for (int y = 0; y < height/cellSize; y++) {
+  for(int x = 0; x < width/cellSize; x++) {
+    for(int y = 0; y < height/cellSize; y++) {
       cellsBuffer[x][y] = cells[x][y];
     }
   }
 
   // Visiter chaque cellule
-  for (int x = 0; x < width/cellSize; x++) {
-    for (int y = 0; y < height/cellSize; y++) {
+  for(int x = 0; x < width/cellSize; x++) {
+    for(int y = 0; y < height/cellSize; y++) {
       // Visiter les voisins de chaque cellule
       int neighbours = 0; //On compte les voisins
-      for (int xx = x-1; xx <= x+1; xx++) {
-        for (int yy = y-1; yy <= y+1; yy++) {
-          if (((xx >= 0) && (xx < width/cellSize)) && ((yy >= 0) && (yy < height/cellSize))) {  // S'assurer qu'on reste dans les limites
-            if (!((xx == x)&&(yy == y))) {   // Verifier la cellule
-              if (cellsBuffer[xx][yy] == 1) {
+      for(int xx = x-1; xx <= x+1; xx++) {
+        for(int yy = y-1; yy <= y+1; yy++) {
+          if(((xx >= 0) && (xx < width/cellSize)) && ((yy >= 0) && (yy < height/cellSize))) {  // S'assurer qu'on reste dans les limites
+            if(!((xx == x)&&(yy == y))) {   // Verifier la cellule
+              if(cellsBuffer[xx][yy] == 1) {
                 neighbours++;   // Verifier les voisins
               }
             } // End of if
           } // End of if
         } // End of yy loop
       } // End of xx loop
-      if (cellsBuffer[x][y] == 1) {   // La cellule est en vie : la tuer si necessaire
-        if (neighbours < 2 || neighbours > 3) {
+      if(cellsBuffer[x][y] == 1) {   // La cellule est en vie : la tuer si necessaire
+        if(neighbours < 2 || neighbours > 3) {
           cells[x][y] = 0;   // Mourir sauf si il a 2/3 voisins
         }
       } else {   // La cellule est morte : la ranimer si necessaire
-        if (neighbours == 3 ) {
+        if(neighbours == 3 ) {
           cells[x][y] = 1;    // Seulement si elle a 3 voisins
         }
       } // End of if
@@ -210,29 +212,29 @@ void iteration() {
 
 
 // OPTION :
-// Si on allume manuellement une cellule
 void keyPressed() {
-  if (key == 'r' || key == 'R') {
-    // Restart : réinitialisation des cellules (TOUCHE 'R' ??)
-    for (int x = 0; x < width/cellSize; x++) {
-      for (int y = 0; y < height/cellSize; y++) {
+  if(key == 'r' || key == 'R') {
+    for(int x = 0; x < width/cellSize; x++) {
+      for(int y = 0; y < height/cellSize; y++) {
         float state = random (100);
-        if (state > probCellsAliveStart) {
-          state = 0;   // state = 0 -> cellule morte
+        if(state > probCellsAliveStart) {
+          state = 0;
         } else {
-          state = 1;   // state = 1 -> cellule vivante
+          state = 1;
         }
         cells[x][y] = int(state);  // Sauver l'état des cellules
       }
     }
   }
-  if (key == ' ') {
-   togglePause = !togglePause ;
+
+  if(key == ' ') {
+    boutonPlay.setValue(!togglePause);
   }
-  if (key == 'c' || key == 'C') { // // Faire un clear all
-    for (int x = 0; x < width/cellSize; x++) {
-      for (int y = 0; y < height/cellSize; y++) {
-        cells[x][y] = 0; // Tout remettre à zeros
+
+  if(key == 'c' || key == 'C') {
+    for(int x = 0; x < width/cellSize; x++) {
+      for(int y = 0; y < height/cellSize; y++) {
+        cells[x][y] = 0;
       }
     }
   }
