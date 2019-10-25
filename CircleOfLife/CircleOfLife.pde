@@ -226,8 +226,8 @@ void keyPressed() {
       }
     }
   }
-  if (togglePause == true) { // ON/OFF de togglePause (TOUCHE BARRE ESPACE ??)
-    key = ' ';
+  if (key == ' ') {
+   togglePause = !togglePause ;
   }
   if (key == 'c' || key == 'C') { // // Faire un clear all
     for (int x = 0; x < width/cellSize; x++) {
